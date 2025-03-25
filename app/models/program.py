@@ -23,3 +23,4 @@ class Program(Base):
 
     # Relationships
     creator = relationship("User", back_populates="programs")
+    sessions = relationship("Session", back_populates="program", cascade="all, delete-orphan")

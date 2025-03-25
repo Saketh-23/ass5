@@ -23,3 +23,4 @@ class User(Base):
 
     # Add relationship to Program
     programs = relationship("Program", back_populates="creator")
+    sessions = relationship("Session", back_populates="trainer")
