@@ -33,13 +33,22 @@ class ProgramService:
 
     @staticmethod
     def get_program(db: Session, program_id: int) -> Program:
-        """Get a program by ID."""
+        """Get a program by ID with rating information."""
         program = ProgramRepository.get_by_id(db, program_id)
         if not program:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Program not found",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Program not found",
             )
+    
+    # Get program rating
+        from app.repositories.review_repository import ReviewRepository
+        avg_rating, review_count = ReviewRepository.get_program_rating(db, program_id)
+    
+    # Attach rating information to the program
+        program.average_rating = avg_rating
+        program.total_reviews = review_count
+    
         return program
 
     @staticmethod

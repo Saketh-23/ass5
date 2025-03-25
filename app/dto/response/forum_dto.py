@@ -1,33 +1,28 @@
-# File path: app/dto/response/program_dto.py
+# File path: app/dto/response/forum_dto.py
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
-from app.models.enums import DifficultyLevel
 from app.dto.response.user_dto import UserResponse
 
-class ProgramResponse(BaseModel):
+class ForumResponse(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
-    category: str
-    difficulty: DifficultyLevel
-    duration: int
     created_by: int
     is_active: bool
-    image_url: Optional[str] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
-    average_rating: Optional[float] = None
-    total_reviews: Optional[int] = 0
+    member_count: Optional[int] = 0
+    discussion_count: Optional[int] = 0
 
     class Config:
         orm_mode = True
 
-class ProgramDetailResponse(ProgramResponse):
+class ForumDetailResponse(ForumResponse):
     creator: Optional[UserResponse] = None
 
-class ProgramListResponse(BaseModel):
-    items: List[ProgramResponse]
+class ForumListResponse(BaseModel):
+    items: List[ForumResponse]
     total: int
     page: int
     size: int

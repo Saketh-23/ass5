@@ -26,3 +26,8 @@ class User(Base):
     sessions = relationship("Session", back_populates="trainer")
     bookings = relationship("Booking", back_populates="user")
     # payments = relationship("Payment", back_populates="user")
+    reviews = relationship("Review", back_populates="user")
+    forums = relationship("Forum", back_populates="creator")
+    forum_memberships = relationship("ForumMembership", back_populates="user")
+    discussions = relationship("Discussion", back_populates="user")
+    
