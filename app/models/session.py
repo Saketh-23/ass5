@@ -27,4 +27,4 @@ class Session(Base):
     # Relationships
     program = relationship("Program", back_populates="sessions")
     trainer = relationship("User", back_populates="sessions")
-    # bookings = relationship("Booking", back_populates="session", cascade="all, delete-orphan")
+    bookings = relationship("Booking", back_populates="session", cascade="all, delete-orphan")
