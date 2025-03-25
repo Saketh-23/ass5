@@ -95,3 +95,47 @@ def get_current_trainer_user(current_user: User = Depends(get_current_user)) -> 
             detail="Not enough permissions",
         )
     return current_user
+
+# File path: app/core/security.py
+# Add these changes to your existing security.py file
+
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+# Your existing OAuth2 scheme
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_PREFIX}/auth/login")
+
+# Create an optional OAuth2 scheme before using it
+oauth2_scheme_optional = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_PREFIX}/auth/login", 
+    auto_error=False
+)
+
+def get_optional_user(
+    token: Optional[str] = Depends(oauth2_scheme_optional), 
+    db: Session = Depends(get_db)
+) -> Optional[User]:
+    """
+    Get the current user from the token if available, otherwise return None.
+    This allows endpoints to work with both authenticated and anonymous users.
+    """
+    if not token:
+        return None
+        
+    try:
+        # Decode the JWT token
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username: str = payload.get("sub")
+        
+        if username is None:
+            return None
+        
+    except JWTError:
+        return None
+    
+    # Get the user from the database
+    user = db.query(User).filter(User.username == username).first()
+    
+    if user is None or not user.is_active:
+        return None
+    
+    return user
