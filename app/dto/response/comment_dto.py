@@ -1,33 +1,29 @@
-# File path: app/dto/response/discussion_dto.py
+# File path: app/dto/response/comment_dto.py
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 from app.dto.response.user_dto import UserResponse
-from app.dto.response.forum_dto import ForumResponse
 
-class DiscussionResponse(BaseModel):
+class CommentResponse(BaseModel):
     id: int
-    forum_id: int
+    discussion_id: int
     user_id: int
-    title: str
     content: str
-    is_pinned: bool
-    is_locked: bool
+    parent_id: Optional[int] = None
     created_at: datetime
     updated_at: Optional[datetime] = None
-    comment_count: Optional[int] = 0
     like_count: Optional[int] = 0
     is_liked_by_user: Optional[bool] = False
 
     class Config:
         orm_mode = True
 
-class DiscussionDetailResponse(DiscussionResponse):
+class CommentDetailResponse(CommentResponse):
     user: Optional[UserResponse] = None
-    forum: Optional[ForumResponse] = None
+    replies: Optional[List['CommentDetailResponse']] = []
 
-class DiscussionListResponse(BaseModel):
-    items: List[DiscussionResponse]
+class CommentListResponse(BaseModel):
+    items: List[CommentDetailResponse]
     total: int
     page: int
     size: int

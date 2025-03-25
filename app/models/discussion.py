@@ -20,4 +20,5 @@ class Discussion(Base):
     # Relationships
     forum = relationship("Forum", back_populates="discussions")
     user = relationship("User", back_populates="discussions")
-    # Will add comments relationship later
+    comments = relationship("Comment", back_populates="discussion", cascade="all, delete-orphan")
+    likes = relationship("Like", back_populates="discussion", cascade="all, delete-orphan")

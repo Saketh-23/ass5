@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, asc
 from app.models.discussion import Discussion
+from app.models.like import Like, LikeTargetType
 
 class DiscussionRepository:
     @staticmethod
@@ -137,3 +138,22 @@ class DiscussionRepository:
             db.refresh(discussion)
             return discussion
         return None
+    
+    @staticmethod
+    def get_like_count(db: Session, discussion_id: int) -> int:
+        """Get the number of likes for a discussion."""
+        return db.query(Like).filter(
+            Like.discussion_id == discussion_id,
+            Like.target_type == LikeTargetType.DISCUSSION
+        ).count()
+
+    @staticmethod
+    def is_liked_by_user(db: Session, discussion_id: int, user_id: int) -> bool:
+        """Check if a discussion is liked by a specific user."""
+        like = db.query(Like).filter(
+            Like.discussion_id == discussion_id,
+            Like.user_id == user_id,
+            Like.target_type == LikeTargetType.DISCUSSION
+        ).first()
+        
+        return like is not None

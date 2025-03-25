@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session as DbSession
 from app.models.discussion import Discussion
 from app.models.user import User, UserRole
 from app.dto.request.discussion_dto import DiscussionCreateRequest, DiscussionUpdateRequest
+from app.repositories.comment_repository import CommentRepository
 from app.repositories.forum_repository import ForumRepository
 from app.repositories.membership_repository import MembershipRepository
 from app.repositories.discussion_repository import DiscussionRepository
@@ -217,3 +218,25 @@ class DiscussionService:
     ) -> List[Discussion]:
         """Get all discussions created by a user."""
         return DiscussionRepository.get_by_user_id(db, user_id, skip, limit)
+    
+    @staticmethod
+    def get_discussion(db: DbSession, discussion_id: int, user_id: Optional[int] = None) -> Discussion:
+        """Get a discussion by ID with like information."""
+        discussion = DiscussionRepository.get_by_id(db, discussion_id)
+        if not discussion:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Discussion not found",
+            )
+        
+        # Add comment count
+        discussion.comment_count = CommentRepository.count_all_by_discussion_id(db, discussion_id)
+        
+        # Add like count
+        discussion.like_count = DiscussionRepository.get_like_count(db, discussion_id)
+        
+        # Add is_liked_by_user flag if user_id is provided
+        if user_id:
+            discussion.is_liked_by_user = DiscussionRepository.is_liked_by_user(db, discussion_id, user_id)
+        
+        return discussion

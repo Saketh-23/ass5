@@ -1,7 +1,7 @@
 # File path: app/api/v1/router.py
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, users, programs, sessions, bookings, discovery, reviews, forums, memberships, discussions
+from app.api.v1.endpoints import auth, users, programs, sessions, bookings, discovery, reviews, forums, memberships, discussions, comments, likes
 
 api_router = APIRouter()
 
@@ -16,5 +16,7 @@ api_router.include_router(reviews.router)
 api_router.include_router(forums.router)
 api_router.include_router(memberships.router)
 api_router.include_router(discussions.router)
+api_router.include_router(comments.router)
+api_router.include_router(likes.router)
 
 # Include additional routes here as they are created

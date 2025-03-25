@@ -30,4 +30,5 @@ class User(Base):
     forums = relationship("Forum", back_populates="creator")
     forum_memberships = relationship("ForumMembership", back_populates="user")
     discussions = relationship("Discussion", back_populates="user")
-    
+    comments = relationship("Comment", back_populates="user")
+    likes = relationship("Like", back_populates="user")
