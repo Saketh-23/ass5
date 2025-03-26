@@ -32,3 +32,8 @@ class User(Base):
     discussions = relationship("Discussion", back_populates="user")
     comments = relationship("Comment", back_populates="user")
     likes = relationship("Like", back_populates="user")
+    goals = relationship("Goal", back_populates="user")
+    achievements = relationship("Achievement", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")
+    chat_messages = relationship("ChatMessage", back_populates="user")
+    meal_logs = relationship("MealLog", back_populates="user")

@@ -1,6 +1,10 @@
 import os
 from pydantic import BaseSettings
 from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -18,6 +22,7 @@ class Settings(BaseSettings):
     
     # CORS
     CORS_ORIGINS: list = ["http://localhost:4200", "http://localhost:3000"]
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     
     class Config:
         env_file = ".env"
